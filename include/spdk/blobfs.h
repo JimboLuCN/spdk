@@ -38,15 +38,14 @@
 #ifndef SPDK_FS_H
 #define SPDK_FS_H
 
-#include "spdk/stdinc.h"
-
 #include "spdk/blob.h"
+#include "spdk/stdinc.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define SPDK_FILE_NAME_MAX	255
+#define SPDK_FILE_NAME_MAX 255
 
 struct spdk_file;
 struct spdk_filesystem;
@@ -54,12 +53,12 @@ struct spdk_filesystem;
 typedef struct spdk_file *spdk_fs_iter;
 
 struct spdk_blobfs_opts {
-	uint32_t	cluster_sz;
+    uint32_t cluster_sz;
 };
 
 struct spdk_file_stat {
-	spdk_blob_id	blobid;
-	uint64_t	size;
+    spdk_blob_id blobid;
+    uint64_t size;
 };
 
 /**
@@ -67,26 +66,32 @@ struct spdk_file_stat {
  *
  * \param ctx Context for the operation.
  * \param fs Handle to a blobfs.
- * \param fserrno 0 if it completed successfully, or negative errno if it failed.
+ * \param fserrno 0 if it completed successfully, or negative errno if it
+ * failed.
  */
-typedef void (*spdk_fs_op_with_handle_complete)(void *ctx, struct spdk_filesystem *fs,
-		int fserrno);
+typedef void (*spdk_fs_op_with_handle_complete)(void *ctx,
+                                                struct spdk_filesystem *fs,
+                                                int fserrno);
 
 /**
  * File operation completion callback with handle.
  *
  * \param ctx Context for the operation.
  * \param f Handle to a file.
- * \param fserrno 0 if it completed successfully, or negative errno if it failed.
+ * \param fserrno 0 if it completed successfully, or negative errno if it
+ * failed.
  */
-typedef void (*spdk_file_op_with_handle_complete)(void *ctx, struct spdk_file *f, int fserrno);
+typedef void (*spdk_file_op_with_handle_complete)(void *ctx,
+                                                  struct spdk_file *f,
+                                                  int fserrno);
 typedef spdk_bs_op_complete spdk_fs_op_complete;
 
 /**
  * File operation completion callback.
  *
  * \param ctx Context for the operation.
- * \param fserrno 0 if it completed successfully, or negative errno if it failed.
+ * \param fserrno 0 if it completed successfully, or negative errno if it
+ * failed.
  */
 typedef void (*spdk_file_op_complete)(void *ctx, int fserrno);
 
@@ -95,9 +100,12 @@ typedef void (*spdk_file_op_complete)(void *ctx, int fserrno);
  *
  * \param ctx Context for the operation.
  * \param stat Handle to the stat about the file.
- * \param fserrno 0 if it completed successfully, or negative errno if it failed.
+ * \param fserrno 0 if it completed successfully, or negative errno if it
+ * failed.
  */
-typedef void (*spdk_file_stat_op_complete)(void *ctx, struct spdk_file_stat *stat, int fserrno);
+typedef void (*spdk_file_stat_op_complete)(void *ctx,
+                                           struct spdk_file_stat *stat,
+                                           int fserrno);
 
 /**
  * Function for a request of file system.
@@ -140,8 +148,8 @@ void spdk_fs_opts_init(struct spdk_blobfs_opts *opts);
  * \param cb_arg Argument passed to function cb_fn.
  */
 void spdk_fs_init(struct spdk_bs_dev *dev, struct spdk_blobfs_opts *opt,
-		  fs_send_request_fn send_request_fn,
-		  spdk_fs_op_with_handle_complete cb_fn, void *cb_arg);
+                  fs_send_request_fn send_request_fn,
+                  spdk_fs_op_with_handle_complete cb_fn, void *cb_arg);
 
 /**
  * Load blobstore filesystem from the given blobstore block device.
@@ -156,7 +164,7 @@ void spdk_fs_init(struct spdk_bs_dev *dev, struct spdk_blobfs_opts *opt,
  * \param cb_arg Argument passed to function cb_fn.
  */
 void spdk_fs_load(struct spdk_bs_dev *dev, fs_send_request_fn send_request_fn,
-		  spdk_fs_op_with_handle_complete cb_fn, void *cb_arg);
+                  spdk_fs_op_with_handle_complete cb_fn, void *cb_arg);
 
 /**
  * Unload blobstore filesystem.
@@ -165,7 +173,8 @@ void spdk_fs_load(struct spdk_bs_dev *dev, fs_send_request_fn send_request_fn,
  * \param cb_fn Called when the unloading is complete.
  * \param cb_arg Argument passed to function cb_fn.
  */
-void spdk_fs_unload(struct spdk_filesystem *fs, spdk_fs_op_complete cb_fn, void *cb_arg);
+void spdk_fs_unload(struct spdk_filesystem *fs, spdk_fs_op_complete cb_fn,
+                    void *cb_arg);
 
 /**
  * Allocate an I/O channel for asynchronous operations.
@@ -179,8 +188,8 @@ struct spdk_io_channel *spdk_fs_alloc_io_channel(struct spdk_filesystem *fs);
 /**
  * Free I/O channel.
  *
- * This function will decrease the references of this I/O channel. If the reference
- * is reduced to 0, the I/O channel will be freed.
+ * This function will decrease the references of this I/O channel. If the
+ * reference is reduced to 0, the I/O channel will be freed.
  *
  * \param channel I/O channel to free.
  */
@@ -203,20 +212,22 @@ struct spdk_fs_thread_ctx *spdk_fs_alloc_thread_ctx(struct spdk_filesystem *fs);
 void spdk_fs_free_thread_ctx(struct spdk_fs_thread_ctx *ctx);
 
 /**
- * Get statistics about the file including the underlying blob id and the file size.
+ * Get statistics about the file including the underlying blob id and the file
+ * size.
  *
  * \param fs Blobstore filesystem.
  * \param ctx The thread context for this operation
- * \param name The file name used to look up the matched file in the blobstore filesystem.
- * \param stat Caller allocated structure to store the obtained information about
- * this file.
+ * \param name The file name used to look up the matched file in the blobstore
+ * filesystem. \param stat Caller allocated structure to store the obtained
+ * information about this file.
  *
  * \return 0 on success, negative errno on failure.
  */
-int spdk_fs_file_stat(struct spdk_filesystem *fs, struct spdk_fs_thread_ctx *ctx,
-		      const char *name, struct spdk_file_stat *stat);
+int spdk_fs_file_stat(struct spdk_filesystem *fs,
+                      struct spdk_fs_thread_ctx *ctx, const char *name,
+                      struct spdk_file_stat *stat);
 
-#define SPDK_BLOBFS_OPEN_CREATE	(1ULL << 0)
+#define SPDK_BLOBFS_OPEN_CREATE (1ULL << 0)
 
 /**
  * Create a new file on the given blobstore filesystem.
@@ -227,22 +238,23 @@ int spdk_fs_file_stat(struct spdk_filesystem *fs, struct spdk_fs_thread_ctx *ctx
  *
  * \return 0 on success, negative errno on failure.
  */
-int spdk_fs_create_file(struct spdk_filesystem *fs, struct spdk_fs_thread_ctx *ctx,
-			const char *name);
+int spdk_fs_create_file(struct spdk_filesystem *fs,
+                        struct spdk_fs_thread_ctx *ctx, const char *name);
 
 /**
  * Open the file.
  *
  * \param fs Blobstore filesystem.
  * \param ctx The thread context for this operation
- * \param name The file name used to look up the matched file in the blobstore filesystem.
- * \param flags This flags will be used to control the open mode.
+ * \param name The file name used to look up the matched file in the blobstore
+ * filesystem. \param flags This flags will be used to control the open mode.
  * \param file It will point to the open file if sccessful or NULL otherwirse.
  *
  * \return 0 on success, negative errno on failure.
  */
-int spdk_fs_open_file(struct spdk_filesystem *fs, struct spdk_fs_thread_ctx *ctx,
-		      const char *name, uint32_t flags, struct spdk_file **file);
+int spdk_fs_open_file(struct spdk_filesystem *fs,
+                      struct spdk_fs_thread_ctx *ctx, const char *name,
+                      uint32_t flags, struct spdk_file **file);
 
 /**
  * Close the file.
@@ -267,8 +279,9 @@ int spdk_file_close(struct spdk_file *file, struct spdk_fs_thread_ctx *ctx);
  *
  * \return 0 on success, negative errno on failure.
  */
-int spdk_fs_rename_file(struct spdk_filesystem *fs, struct spdk_fs_thread_ctx *ctx,
-			const char *old_name, const char *new_name);
+int spdk_fs_rename_file(struct spdk_filesystem *fs,
+                        struct spdk_fs_thread_ctx *ctx, const char *old_name,
+                        const char *new_name);
 
 /**
  * Delete the file.
@@ -279,15 +292,16 @@ int spdk_fs_rename_file(struct spdk_filesystem *fs, struct spdk_fs_thread_ctx *c
  *
  * \return 0 on success, negative errno on failure.
  */
-int spdk_fs_delete_file(struct spdk_filesystem *fs, struct spdk_fs_thread_ctx *ctx,
-			const char *name);
+int spdk_fs_delete_file(struct spdk_filesystem *fs,
+                        struct spdk_fs_thread_ctx *ctx, const char *name);
 
 /**
  * Get the first file in the blobstore filesystem.
  *
  * \param fs Blobstore filesystem to traverse.
  *
- * \return an iterator which points to the first file in the blobstore filesystem.
+ * \return an iterator which points to the first file in the blobstore
+ * filesystem.
  */
 spdk_fs_iter spdk_fs_iter_first(struct spdk_filesystem *fs);
 
@@ -296,11 +310,12 @@ spdk_fs_iter spdk_fs_iter_first(struct spdk_filesystem *fs);
  *
  * \param iter The iterator which points to the current file struct.
  *
- * \return an iterator which points to the next file in the blobstore filesystem.
+ * \return an iterator which points to the next file in the blobstore
+ * filesystem.
  */
 spdk_fs_iter spdk_fs_iter_next(spdk_fs_iter iter);
 
-#define spdk_fs_iter_get_file(iter)	((struct spdk_file *)(iter))
+#define spdk_fs_iter_get_file(iter) ((struct spdk_file *)(iter))
 
 /**
  * Truncate the file.
@@ -312,7 +327,7 @@ spdk_fs_iter spdk_fs_iter_next(spdk_fs_iter iter);
  * \return 0 on success, negative errno on failure.
  */
 int spdk_file_truncate(struct spdk_file *file, struct spdk_fs_thread_ctx *ctx,
-		       uint64_t length);
+                       uint64_t length);
 
 /**
  * Get file name.
@@ -333,18 +348,34 @@ const char *spdk_file_get_name(struct spdk_file *file);
 uint64_t spdk_file_get_length(struct spdk_file *file);
 
 /**
- * Write data to the given file.
+ * Sequential Write data to the given file.
  *
  * \param file File to write.
  * \param ctx The thread context for this operation
- * \param payload The specified buffer which should contain the data to be transmitted.
- * \param offset The beginning position to write data.
- * \param length The size in bytes of data to write.
+ * \param payload The specified buffer which should contain the data to be
+ * transmitted. \param offset The beginning position to write data. \param
+ * length The size in bytes of data to write.
  *
  * \return 0 on success, negative errno on failure.
  */
 int spdk_file_write(struct spdk_file *file, struct spdk_fs_thread_ctx *ctx,
-		    void *payload, uint64_t offset, uint64_t length);
+                    void *payload, uint64_t offset, uint64_t length);
+
+/**
+ * Random write data to the given file. no hole is permitted between valid
+ * ranges.
+ *
+ * \param file File to write.
+ * \param ctx The thread context for this operation
+ * \param payload The specified buffer which should contain the data to be
+ * transmitted. \param offset The beginning position to write data, data before
+ * offset must be valid. \param length The size in bytes of data to write.
+ *
+ * \return 0 on success, negative errno on failure.
+ */
+int spdk_file_randomwrite(struct spdk_file *file,
+                          struct spdk_fs_thread_ctx *ctx, void *payload,
+                          uint64_t offset, uint64_t length);
 
 /**
  * Read data to user buffer from the given file.
@@ -355,10 +386,11 @@ int spdk_file_write(struct spdk_file *file, struct spdk_fs_thread_ctx *ctx,
  * \param offset The beginning position to read.
  * \param length The size in bytes of data to read.
  *
- * \return the end position of this read operation on success, negated errno on failure.
+ * \return the end position of this read operation on success, negated errno on
+ * failure.
  */
 int64_t spdk_file_read(struct spdk_file *file, struct spdk_fs_thread_ctx *ctx,
-		       void *payload, uint64_t offset, uint64_t length);
+                       void *payload, uint64_t offset, uint64_t length);
 
 /**
  * Set cache size for the blobstore filesystem.
@@ -376,14 +408,15 @@ int spdk_fs_set_cache_size(uint64_t size_in_mb);
  */
 uint64_t spdk_fs_get_cache_size(void);
 
-#define SPDK_FILE_PRIORITY_LOW	0 /* default */
-#define SPDK_FILE_PRIORITY_HIGH	1
+#define SPDK_FILE_PRIORITY_LOW 0 /* default */
+#define SPDK_FILE_PRIORITY_HIGH 1
 
 /**
  * Set priority for the file.
  *
  * \param file File to set priority.
- * \param priority Priority level (SPDK_FILE_PRIORITY_LOW or SPDK_FILE_PRIORITY_HIGH).
+ * \param priority Priority level (SPDK_FILE_PRIORITY_LOW or
+ * SPDK_FILE_PRIORITY_HIGH).
  */
 void spdk_file_set_priority(struct spdk_file *file, uint32_t priority);
 
@@ -422,9 +455,10 @@ int spdk_file_get_id(struct spdk_file *file, void *id, size_t size);
  *
  * \return None.
  */
-void spdk_file_readv_async(struct spdk_file *file, struct spdk_io_channel *channel,
-			   struct iovec *iovs, uint32_t iovcnt, uint64_t offset, uint64_t length,
-			   spdk_file_op_complete cb_fn, void *cb_arg);
+void spdk_file_readv_async(struct spdk_file *file,
+                           struct spdk_io_channel *channel, struct iovec *iovs,
+                           uint32_t iovcnt, uint64_t offset, uint64_t length,
+                           spdk_file_op_complete cb_fn, void *cb_arg);
 
 /**
  * Write data to the given file.
@@ -440,22 +474,24 @@ void spdk_file_readv_async(struct spdk_file *file, struct spdk_io_channel *chann
  *
  * \return None.
  */
-void spdk_file_writev_async(struct spdk_file *file, struct spdk_io_channel *channel,
-			    struct iovec *iovs, uint32_t iovcnt, uint64_t offset, uint64_t length,
-			    spdk_file_op_complete cb_fn, void *cb_arg);
+void spdk_file_writev_async(struct spdk_file *file,
+                            struct spdk_io_channel *channel, struct iovec *iovs,
+                            uint32_t iovcnt, uint64_t offset, uint64_t length,
+                            spdk_file_op_complete cb_fn, void *cb_arg);
 
 /**
- * Get statistics about the file including the underlying blob id and the file size.
+ * Get statistics about the file including the underlying blob id and the file
+ * size.
  *
  * \param fs Blobstore filesystem.
- * \param name The file name used to look up the matched file in the blobstore filesystem.
- * \param cb_fn Called when the request is complete.
- * \param cb_arg Argument passed to cb_fn.
+ * \param name The file name used to look up the matched file in the blobstore
+ * filesystem. \param cb_fn Called when the request is complete. \param cb_arg
+ * Argument passed to cb_fn.
  *
  * return None.
  */
 void spdk_fs_file_stat_async(struct spdk_filesystem *fs, const char *name,
-			     spdk_file_stat_op_complete cb_fn, void *cb_arg);
+                             spdk_file_stat_op_complete cb_fn, void *cb_arg);
 
 /**
  * Create a new file on the given blobstore filesystem.
@@ -468,21 +504,23 @@ void spdk_fs_file_stat_async(struct spdk_filesystem *fs, const char *name,
  * return None.
  */
 void spdk_fs_create_file_async(struct spdk_filesystem *fs, const char *name,
-			       spdk_file_op_complete cb_fn, void *cb_arg);
+                               spdk_file_op_complete cb_fn, void *cb_arg);
 
 /**
  * Open the file.
  *
  * \param fs Blobstore filesystem.
- * \param name The file name used to look up the matched file in the blobstore filesystem.
- * \param flags This flags will be used to control the open mode.
+ * \param name The file name used to look up the matched file in the blobstore
+ * filesystem. \param flags This flags will be used to control the open mode.
  * \param cb_fn Called when the request is complete.
  * \param cb_arg Argument passed to cb_fn.
  *
  * return None.
  */
-void spdk_fs_open_file_async(struct spdk_filesystem *fs, const char *name, uint32_t flags,
-			     spdk_file_op_with_handle_complete cb_fn, void *cb_arg);
+void spdk_fs_open_file_async(struct spdk_filesystem *fs, const char *name,
+                             uint32_t flags,
+                             spdk_file_op_with_handle_complete cb_fn,
+                             void *cb_arg);
 
 /**
  * Close the file.
@@ -493,8 +531,8 @@ void spdk_fs_open_file_async(struct spdk_filesystem *fs, const char *name, uint3
  *
  * return None.
  */
-void spdk_file_close_async(struct spdk_file *file, spdk_file_op_complete cb_fn, void *cb_arg);
-
+void spdk_file_close_async(struct spdk_file *file, spdk_file_op_complete cb_fn,
+                           void *cb_arg);
 
 /**
  * Change the file name.
@@ -511,8 +549,8 @@ void spdk_file_close_async(struct spdk_file *file, spdk_file_op_complete cb_fn, 
  * return None.
  */
 void spdk_fs_rename_file_async(struct spdk_filesystem *fs, const char *old_name,
-			       const char *new_name, spdk_fs_op_complete cb_fn,
-			       void *cb_arg);
+                               const char *new_name, spdk_fs_op_complete cb_fn,
+                               void *cb_arg);
 
 /**
  * Delete the file.
@@ -526,7 +564,7 @@ void spdk_fs_rename_file_async(struct spdk_filesystem *fs, const char *old_name,
  *
  */
 void spdk_fs_delete_file_async(struct spdk_filesystem *fs, const char *name,
-			       spdk_file_op_complete cb_fn, void *cb_arg);
+                               spdk_file_op_complete cb_fn, void *cb_arg);
 
 /**
  * Truncate the file.
@@ -539,24 +577,24 @@ void spdk_fs_delete_file_async(struct spdk_filesystem *fs, const char *name,
  * return None.
  */
 void spdk_file_truncate_async(struct spdk_file *file, uint64_t length,
-			      spdk_file_op_complete cb_fn, void *cb_arg);
+                              spdk_file_op_complete cb_fn, void *cb_arg);
 
 /**
  * Write data to the given file.
  *
  * \param file File to write.
  * \param channel I/O channel for asynchronous operations.
- * \param payload The specified buffer which should contain the data to be transmitted.
- * \param offset The beginning position to write data.
- * \param length The size in bytes of data to write.
- * \param cb_fn Called when the request is complete.
- * \param cb_arg Argument passed to cb_fn.
+ * \param payload The specified buffer which should contain the data to be
+ * transmitted. \param offset The beginning position to write data. \param
+ * length The size in bytes of data to write. \param cb_fn Called when the
+ * request is complete. \param cb_arg Argument passed to cb_fn.
  *
  * return None.
  */
-void spdk_file_write_async(struct spdk_file *file, struct spdk_io_channel *channel,
-			   void *payload, uint64_t offset, uint64_t length,
-			   spdk_file_op_complete cb_fn, void *cb_arg);
+void spdk_file_write_async(struct spdk_file *file,
+                           struct spdk_io_channel *channel, void *payload,
+                           uint64_t offset, uint64_t length,
+                           spdk_file_op_complete cb_fn, void *cb_arg);
 
 /**
  * Read data to user buffer from the given file.
@@ -571,9 +609,10 @@ void spdk_file_write_async(struct spdk_file *file, struct spdk_io_channel *chann
  *
  * return None.
  */
-void spdk_file_read_async(struct spdk_file *file, struct spdk_io_channel *channel,
-			  void *payload, uint64_t offset, uint64_t length,
-			  spdk_file_op_complete cb_fn, void *cb_arg);
+void spdk_file_read_async(struct spdk_file *file,
+                          struct spdk_io_channel *channel, void *payload,
+                          uint64_t offset, uint64_t length,
+                          spdk_file_op_complete cb_fn, void *cb_arg);
 
 /**
  * Sync all dirty cache buffers to the backing block device.  For async
@@ -589,8 +628,9 @@ void spdk_file_read_async(struct spdk_file *file, struct spdk_io_channel *channe
  *
  * return None.
  */
-void spdk_file_sync_async(struct spdk_file *file, struct spdk_io_channel *channel,
-			  spdk_file_op_complete cb_fn, void *cb_arg);
+void spdk_file_sync_async(struct spdk_file *file,
+                          struct spdk_io_channel *channel,
+                          spdk_file_op_complete cb_fn, void *cb_arg);
 
 #ifdef __cplusplus
 }
